@@ -38,9 +38,8 @@
 """
 import asyncio
 import os
-import random
-import asyncio
 import time
+import random
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError, FloodWaitError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.functions.contacts import BlockRequest, UnblockRequest
@@ -97,6 +96,7 @@ def read_words():
     with open("words.txt", "r") as file:
         words = [line.strip() for line in file]
     return words
+
 start_time = time.time()
 
 @ultroid_cmd(pattern="gpromote( (.*)|$)", fullsudo=True)
@@ -437,11 +437,6 @@ async def _(e):
     await xx.edit(gb_msg)
 
 
-import asyncio
-import time
-
-# Menambahkan waktu awal
-start_time = time.time()
 
 @ultroid_cmd(pattern="g(admin|)cast ?(.*)")
 async def gcast(event):
