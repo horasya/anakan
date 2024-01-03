@@ -435,6 +435,12 @@ async def _(e):
     await xx.edit(gb_msg)
 
 
+import asyncio
+import time
+
+# Menambahkan waktu awal
+start_time = time.time()
+
 @ultroid_cmd(pattern="g(admin|)cast ?(.*)")
 async def gcast(event):
     text, btn, reply = "", None, None
@@ -466,38 +472,21 @@ async def gcast(event):
         dialog = await event.client.get_dialogs()
         event.client._dialogs.extend(dialog)
 
-    for x in dialog:
-        if x.is_group:
-            chat = x.entity.id
-            if (
-                not keym.contains(chat)
-                and int(f"-100{str(chat)}") not in NOSPAM_CHAT
-                and (
-                    (
-                        event.text[2:7] != "admin"
-                        or (x.entity.admin_rights or x.entity.creator)
+    # Mengatur batasan waktu menjadi 15 menit
+    while time.time() - start_time < 120 and done < 3:
+        for x in dialog:
+            if x.is_group:
+                chat = x.entity.id
+                if (
+                    not keym.contains(chat)
+                    and int(f"-100{str(chat)}") not in NOSPAM_CHAT
+                    and (
+                        (
+                            event.text[2:7] != "admin"
+                            or (x.entity.admin_rights or x.entity.creator)
+                        )
                     )
-                )
-            ):
-                try:
-                    random_word = random.choice(words).strip()
-                    if btn:
-                        bt = create_tl_btn(btn)
-                        await something(
-                            event,
-                            random_word,
-                            reply.media if reply else None,
-                            bt,
-                            chat=chat,
-                            reply=False,
-                        )
-                    else:
-                        await event.client.send_message(
-                            chat, random_word, file=reply.media if reply else None
-                        )
-                    done += 1
-                except FloodWaitError as fw:
-                    await asyncio.sleep(fw.seconds + 10)
+                ):
                     try:
                         random_word = random.choice(words).strip()
                         if btn:
@@ -515,18 +504,38 @@ async def gcast(event):
                                 chat, random_word, file=reply.media if reply else None
                             )
                         done += 1
-                    except Exception as rr:
-                        err += f"• {rr}\n"
+                    except FloodWaitError as fw:
+                        await asyncio.sleep(fw.seconds + 10)
+                        try:
+                            random_word = random.choice(words).strip()
+                            if btn:
+                                bt = create_tl_btn(btn)
+                                await something(
+                                    event,
+                                    random_word,
+                                    reply.media if reply else None,
+                                    bt,
+                                    chat=chat,
+                                    reply=False,
+                                )
+                            else:
+                                await event.client.send_message(
+                                    chat, random_word, file=reply.media if reply else None
+                                )
+                            done += 1
+                        except Exception as rr:
+                            err += f"• {rr}\n"
+                            er += 1
+                    except BaseException as h:
+                        err += f"• {str(h)}" + "\n"
                         er += 1
-                except BaseException as h:
-                    err += f"• {str(h)}" + "\n"
-                    er += 1
 
     text += f"Done in {done} chats, error in {er} chat(s)"
     if err != "":
         open("gcast-error.log", "w+").write(err)
         text += f"\nYou can do `{HNDLR}ul gcast-error.log` to know the error report."
     await kk.edit(text)
+
 
 
 
