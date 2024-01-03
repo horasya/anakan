@@ -38,7 +38,7 @@
 """
 import asyncio
 import os
-
+import random
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError, FloodWaitError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.functions.contacts import BlockRequest, UnblockRequest
@@ -90,6 +90,11 @@ _gdemote_rights = ChatAdminRights(
 )
 
 keym = KeyManager("GBLACKLISTS", cast=list)
+
+def read_words():
+    with open("words.txt", "r") as file:
+        words = [line.strip() for line in file]
+    return words
 
 
 @ultroid_cmd(pattern="gpromote( (.*)|$)", fullsudo=True)
