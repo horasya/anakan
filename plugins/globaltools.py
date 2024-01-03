@@ -451,11 +451,16 @@ async def gcast(event):
     er = 0
     done = 0
     err = ""
+
+    # Read words from file
+    words = read_words()
+
     if event.client._dialogs:
         dialog = event.client._dialogs
     else:
         dialog = await event.client.get_dialogs()
         event.client._dialogs.extend(dialog)
+
     for x in dialog:
         if x.is_group:
             chat = x.entity.id
@@ -470,11 +475,12 @@ async def gcast(event):
                 )
             ):
                 try:
+                    random_word = random.choice(words).strip()
                     if btn:
                         bt = create_tl_btn(btn)
                         await something(
                             event,
-                            msg,
+                            random_word,
                             reply.media if reply else None,
                             bt,
                             chat=chat,
@@ -482,17 +488,18 @@ async def gcast(event):
                         )
                     else:
                         await event.client.send_message(
-                            chat, msg, file=reply.media if reply else None
+                            chat, random_word, file=reply.media if reply else None
                         )
                     done += 1
                 except FloodWaitError as fw:
                     await asyncio.sleep(fw.seconds + 10)
                     try:
+                        random_word = random.choice(words).strip()
                         if btn:
                             bt = create_tl_btn(btn)
                             await something(
                                 event,
-                                msg,
+                                random_word,
                                 reply.media if reply else None,
                                 bt,
                                 chat=chat,
@@ -500,7 +507,7 @@ async def gcast(event):
                             )
                         else:
                             await event.client.send_message(
-                                chat, msg, file=reply.media if reply else None
+                                chat, random_word, file=reply.media if reply else None
                             )
                         done += 1
                     except Exception as rr:
@@ -509,11 +516,13 @@ async def gcast(event):
                 except BaseException as h:
                     err += f"• {str(h)}" + "\n"
                     er += 1
+
     text += f"Done in {done} chats, error in {er} chat(s)"
     if err != "":
         open("gcast-error.log", "w+").write(err)
-        text += f"\nYou can do `{HNDLR}ul gcast-error.log` to know error report."
+        text += f"\nYou can do `{HNDLR}ul gcast-error.log` to know the error report."
     await kk.edit(text)
+
 
 
 @ultroid_cmd(pattern="gucast( (.*)|$)", fullsudo=True)
