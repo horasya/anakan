@@ -92,11 +92,6 @@ _gdemote_rights = ChatAdminRights(
 
 keym = KeyManager("GBLACKLISTS", cast=list)
 
-def read_words():
-    with open("words.txt", "r") as file:
-        words = [line.strip() for line in file]
-    return words
-
 start_time = time.time()
 
 @ultroid_cmd(pattern="gpromote( (.*)|$)", fullsudo=True)
