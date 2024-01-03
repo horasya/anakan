@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPO="https://github.com/sabutangede/teman.git"
+REPO="https://github.com/kelopakyakan/berniat.git"
 CURRENT_DIR="$(pwd)"
 ENV_FILE_PATH=".env"
 DIR="/root/TeamUltroid"
