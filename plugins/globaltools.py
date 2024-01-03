@@ -39,6 +39,8 @@
 import asyncio
 import os
 import random
+import asyncio
+import time
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError, FloodWaitError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.functions.contacts import BlockRequest, UnblockRequest
@@ -95,7 +97,7 @@ def read_words():
     with open("words.txt", "r") as file:
         words = [line.strip() for line in file]
     return words
-
+start_time = time.time()
 
 @ultroid_cmd(pattern="gpromote( (.*)|$)", fullsudo=True)
 async def _(e):
