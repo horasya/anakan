@@ -39,7 +39,6 @@
 import asyncio
 import os
 import time
-import random
 from telethon.errors.rpcerrorlist import ChatAdminRequiredError, FloodWaitError
 from telethon.tl.functions.channels import EditAdminRequest
 from telethon.tl.functions.contacts import BlockRequest, UnblockRequest
@@ -458,9 +457,6 @@ async def gcast(event):
     done = 0
     err = ""
 
-    # Read words from file
-    words = read_words()
-
     if event.client._dialogs:
         dialog = event.client._dialogs
     else:
@@ -528,6 +524,7 @@ async def gcast(event):
         open("gcast-error.log", "w+").write(err)
         text += f"\nYou can do `{HNDLR}ul gcast-error.log` to know error report."
     await kk.edit(text)
+
 
 
 
